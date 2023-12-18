@@ -1,0 +1,34 @@
+{
+	"name": "gimkit",
+	"version": "1.0.0",
+	"description": "gimkit tools",
+	"main": "dist/bundle.js",
+	"scripts": {
+		"build": "npx webpack --mode=production && copy manifest.json dist && web-ext build --overwrite-dest",
+		"watch": "npx webpack --mode=production --watch",
+		"sign": "web-ext sign --api-key=$env:AMO_JWT_ISSUER --api-secret=$env:AMO_JWT_SECRET"
+	},
+	"author": "kaoru",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/webextension-polyfill": "^0.10.7",
+		"@typescript-eslint/eslint-plugin": "^6.14.0",
+		"@typescript-eslint/parser": "^6.14.0",
+		"eslint": "^8.56.0",
+		"ts-loader": "^9.5.1",
+		"typescript": "^5.3.3",
+		"webextension-polyfill": "^0.10.0",
+		"webpack": "^5.89.0",
+		"webpack-cli": "^5.1.4"
+	},
+	"webExt": {
+		"sourceDir": "dist",
+		"artifactsDir": "artifacts",
+		"ignoreFiles": [
+			"**/*.map"
+		]
+	},
+	"dependencies": {
+		"@types/web": "^0.0.127"
+	}
+}
