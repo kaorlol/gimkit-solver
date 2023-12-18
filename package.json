@@ -2,9 +2,9 @@
 	"name": "gimkit",
 	"version": "1.0.0",
 	"description": "gimkit tools",
-	"main": "dist/bundle.js",
+	"main": "build/content.js",
 	"scripts": {
-		"build": "npx webpack --mode=production && copy manifest.json dist && web-ext build --overwrite-dest",
+		"build": "npx webpack --mode=production && copy manifest.json build && web-ext build --overwrite-dest",
 		"watch": "npx webpack --mode=production --watch",
 		"sign": "web-ext sign --api-key=$env:AMO_JWT_ISSUER --api-secret=$env:AMO_JWT_SECRET"
 	},
@@ -22,7 +22,7 @@
 		"webpack-cli": "^5.1.4"
 	},
 	"webExt": {
-		"sourceDir": "dist",
+		"sourceDir": "build",
 		"artifactsDir": "artifacts",
 		"ignoreFiles": [
 			"**/*.map"
