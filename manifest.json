@@ -1,12 +1,12 @@
 {
 	"manifest_version": 2,
 	"name": "Gimkit Solver",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Gimkit Auto Answer",
 	"permissions": ["webRequest", "ws://*/*", "wss://*/*"],
 	"content_scripts": [
 		{
-			"matches": ["https://www.gimkit.com/join/*"],
+			"matches": ["https://www.gimkit.com/join", "https://www.gimkit.com/join/*", "https://www.gimkit.com/join?*"],
 			"js": ["content.js"],
 			"run_at": "document_start"
 		}
