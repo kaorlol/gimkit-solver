@@ -1,4 +1,4 @@
-import { AnswererData, Change, Packet, Question } from "../types";
+import { AnswererData, Change, Question } from "../types";
 import SocketHandler from "./SocketHandler/Socket";
 
 class Answerer {
@@ -64,7 +64,8 @@ class Answerer {
 				}
 
 				for (const [key, value] of Object.entries(change.data)) {
-					if (key.includes("currentQuestionId") && key.includes(window.stores?.phaser?.mainCharacter?.id)) {
+					const mainCharacterId = window.stores?.phaser?.mainCharacter?.id;
+					if (key.includes("currentQuestionId") && key.includes(mainCharacterId)) {
 						this.answerData.currentQuestionId = value;
 					}
 				}
@@ -76,44 +77,53 @@ class Answerer {
 		if (this.socketHandler.transportType == "colyseus") {
 			this.HandleColyseusTransport();
 		} else {
-			this.HandleNonColyseusTransport();
+			this.HandleBlueboatTransport();
 		}
 	}
 
 	private HandleColyseusTransport() {
 		if (this.answerData.currentQuestionId == "") return;
 
-		const correctQuestion = this.answerData.questions?.find((question) => question._id == this.answerData.currentQuestionId);
+		const questions = this.answerData.questions;
+		const currentQuestionId = this.answerData.currentQuestionId;
+		const correctQuestion = questions?.find((question) => question._id == currentQuestionId);
 		if (!correctQuestion) return;
 
-		const packet: Packet = {
+		const answerId = this.GetAnswerForQuestion(correctQuestion);
+		this.socketHandler.SendData("MESSAGE_FOR_DEVICE", {
 			key: "answered",
 			deviceId: this.answerData.answerDeviceId,
-			data: { answer: this.GetAnswerForQuestion(correctQuestion) },
-		};
+			data: { answer: answerId },
+		});
 
-		this.socketHandler.SendData("MESSAGE_FOR_DEVICE", packet);
+		const answerText = correctQuestion.answers.find((answer) => answer._id == answerId)?.text;
+		console.info(`[GS] 🎯 Answered question: '${correctQuestion.text}' with answer: '${answerText}'`);
 	}
 
-	private HandleNonColyseusTransport() {
-		const questionId = this.answerData.questionIdList[this.answerData.currentQuestionIndex];
-		const question = this.answerData.questions.find((question) => question._id == questionId);
+	private HandleBlueboatTransport() {
+		const questions = this.answerData.questions;
+		const currentQuestionIndex = this.answerData.currentQuestionIndex;
+		const questionId = this.answerData.questionIdList[currentQuestionIndex];
+		const question = questions.find((question) => question._id == questionId);
 		if (!question) return;
 
-		const answer = this.GetAnswerForQuestion(question);
+		const answerId = this.GetAnswerForQuestion(question);
 		this.socketHandler.SendData("QUESTION_ANSWERED", {
-			answer,
+			answerId,
 			questionId,
 		});
+
+		const answerText = question.answers.find((answer) => answer._id == answerId)?.text;
+		console.info(`[GS] 🎯 Answered question: '${question.text}' with answer: '${answerText}'`);
 	}
 
 	private GetAnswerForQuestion(question: Question): string {
 		if (question.type == "mc") {
 			const correctAnswerId = question.answers.find((answer) => answer.correct)?._id;
 			return correctAnswerId || "";
-		} else {
-			return question.answers[0].text;
 		}
+
+		return question.answers[0].text;
 	}
 }
 

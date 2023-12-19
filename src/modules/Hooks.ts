@@ -15,7 +15,7 @@ export function InitBypass() {
 		},
 	});
 
-	console.info("🪝 [GS] Hooked addEventListener.");
+	console.info("🪝 [GS] Hooked addEventListener");
 
 	Node.prototype.dispatchEvent = new Proxy(Node.prototype.dispatchEvent, {
 		apply(target, thisArg, args) {
@@ -32,7 +32,7 @@ export function InitBypass() {
 		},
 	});
 
-	console.info("🪝 [GS] Hooked dispatchEvent.");
+	console.info("🪝 [GS] Hooked dispatchEvent");
 
 	function eventToObject(event: { [x: string]: unknown }) {
 		const object: { [x: string]: unknown } = {};

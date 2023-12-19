@@ -47,7 +47,7 @@ import Answerer from "./modules/Answerer";
 const socketHandler = new SocketHandler();
 socketHandler.addEventListener("socket", (event) => {
 	const detail = (event as CustomEvent).detail;
-	console.info("[GS] 🪝 Hooked WebSocket: ", detail.url);
+	console.info("[GS] 🪝 Hooked WebSocket:", detail.url);
 });
 
 const answerer = new Answerer("Packet", socketHandler);
@@ -55,4 +55,4 @@ answerer.AutoAnswer();
 
 socketHandler.GetSocket();
 
-console.info("[GS] 🚀 Started.");
+console.info("[GS] 🚀 Started Gimkit Solver");

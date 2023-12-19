@@ -1,6 +1,6 @@
 // took (mostly) from https://github.com/TheLazySquid/GimkitCheat/blob/main/src/network/socket.ts THANKS!
 
-import Colyseus from "./modules/Colyseus"
+import Colyseus from "./modules/Colyseus";
 import Blueboat from "./modules/BlueBoat";
 import { ParsePacket } from "./Utils/ParsePacket";
 
@@ -51,34 +51,45 @@ class SocketHandler extends EventTarget {
 		if ("stores" in window) this.transportType = "colyseus";
 		else this.transportType = "blueboat";
 
-		socket.addEventListener("message", (e) => {
-			let decoded
-			if (this.transportType == "colyseus") decoded = Colyseus.decode(e.data);
-			else decoded = Blueboat.decode(e.data);
-
+		socket.addEventListener("message", (event) => {
+			const decoded = this.Decode(event.data as string);
 			if (!decoded) return;
+
+			console.debug(`[GS] 📦 Received data from ${this.transportType} socket`);
+			console.debug(`[GS] 🔓 Decoded data: ${JSON.stringify(decoded)}`);
 
 			this.dispatchEvent(new CustomEvent("receiveMessage", { detail: decoded }));
 
-			if (typeof decoded != "object") return;
-			if ("changes" in decoded) {
-				const parsed = ParsePacket(decoded);
-				this.dispatchEvent(new CustomEvent("receiveChanges", { detail: parsed }));
+			if (typeof decoded == "object" && "changes" in decoded) {
+				this.dispatchEvent(new CustomEvent("receiveChanges", { detail: ParsePacket(decoded) }));
 			}
 		});
 	}
 
 	SendData(channel: string, data: unknown) {
 		if (!this.socket) return;
-		if (!this.roomId && this.transportType == "blueboat") throw new Error("Room ID not found, can't send data");
 
-		let encoded
-		if(this.transportType == "colyseus") encoded = Colyseus.encode(channel, data);
-		else encoded = Blueboat.encode(channel, data, this.roomId);
-
+		const encoded = this.Encode(channel, data);
 		this.socket.send(encoded);
 
-		console.debug(`[GS] 🥏 Sent data to ${this.transportType} socket sent successfully.`);
+		console.debug(`[GS] 🥏 Sent data to ${this.transportType} socket`);
+		console.debug(`[GS] 🧩 Encoded data: ${this.ArrayBufferToString(encoded)}`);
+	}
+
+	private ArrayBufferToString(buffer: ArrayBuffer) {
+		return String.fromCharCode.apply(null, Array.from(new Uint8Array(buffer)));
+	}
+
+	private Encode(channel: string, data: unknown) {
+		if (!this.roomId && this.transportType == "blueboat") throw new Error("Room ID not found, can't send data");
+
+		if (this.transportType == "colyseus") return Colyseus.encode(channel, data);
+		else return Blueboat.encode(channel, data, this.roomId);
+	}
+
+	private Decode(data: string) {
+		if (this.transportType == "colyseus") return Colyseus.decode(data);
+		else return Blueboat.decode(data);
 	}
 }
 
