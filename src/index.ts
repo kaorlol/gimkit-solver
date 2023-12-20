@@ -54,6 +54,7 @@ socketHandler.addEventListener("socket", (event) => {
 });
 
 const answerer = new Answerer("Packet", socketHandler);
+answerer.StartReceiver();
 answerer.AutoAnswer();
 
 socketHandler.GetSocket();

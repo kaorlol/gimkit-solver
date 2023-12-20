@@ -27,13 +27,13 @@ function encodeUTF8ToByteArray(dataView, byteOffset, unicodeString) {
     }
 }
 
-function encode(t, e, s) {
+function encode(channel, data, roomId) {
 	let o;
 
-	if (Array.isArray(t)) {
+	if (Array.isArray(channel)) {
 		o = {
 			type: 2,
-			data: t,
+			data: channel,
 			options: {
 				compress: !0,
 			},
@@ -45,9 +45,9 @@ function encode(t, e, s) {
 			data: [
 				"blueboat_SEND_MESSAGE",
 				{
-					room: s,
-					key: t,
-					data: e,
+					room: roomId,
+					key: channel,
+					data: data,
 				},
 			],
 			options: {

@@ -5,6 +5,17 @@ declare global {
 				mainCharacter: {
 					id: string;
 				};
+			},
+			network: {
+				room: {
+					connection: {
+						transport: {
+							ws: {
+								url: string;
+							}
+						};
+					};
+				};
 			};
 		};
 	}
@@ -16,9 +27,11 @@ export interface Socket extends WebSocket {
 }
 
 export interface Packet {
-	key: string;
-	deviceId: string;
-	data: {
+	key?: string;
+	deviceId?: string;
+	answer?: string;
+	questionId?: string;
+	data?: {
 		[key: string]: string;
 	};
 }

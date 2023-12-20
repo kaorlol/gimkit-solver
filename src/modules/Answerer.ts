@@ -21,8 +21,6 @@ class Answerer {
 
 	AutoAnswer() {
 		if (this.type == "Packet") {
-			this.StartReceiver();
-
 			const interval = setInterval(() => {
 				if (this.gameEnded) {
 					clearInterval(interval);
@@ -34,7 +32,7 @@ class Answerer {
 		}
 	}
 
-	private StartReceiver() {
+	StartReceiver() {
 		this.socketHandler.addEventListener("receiveMessage", (event) => {
 			const detail = (event as CustomEvent).detail;
 			if (detail?.key == "end_game" || detail?.key == "UPDATED_PLAYER_LEADERBOARD") {

@@ -1,7 +1,8 @@
-import Colyseus from "./frameworks/Colyseus";
+// import Colyseus from "./frameworks/Colyseus";
+import Colyseus from "./frameworks/colyseus/export";
 import Blueboat from "./frameworks/BlueBoat";
 import { ParsePacket } from "./Utils/ParsePacket";
-import { Socket } from "../../types";
+import { Packet, Socket } from "../../types";
 
 class SocketHandler extends EventTarget {
 	socket: Socket | null = null;
@@ -46,7 +47,7 @@ class SocketHandler extends EventTarget {
 		else this.transportType = "blueboat";
 
 		socket.addEventListener("message", (event) => {
-			const decoded = this.Decode(event.data as string);
+			const decoded = this.Decode(event.data);
 			if (!decoded) return;
 
 			console.debug(`[GS] 📦 Received data from ${this.transportType} socket`);
@@ -60,7 +61,7 @@ class SocketHandler extends EventTarget {
 		});
 	}
 
-	SendData(channel: string, data: unknown) {
+	SendData(channel: string, data: Packet) {
 		if (!this.socket) return;
 
 		const encoded = this.Encode(channel, data);
@@ -74,14 +75,14 @@ class SocketHandler extends EventTarget {
 		return String.fromCharCode.apply(null, Array.from(new Uint8Array(buffer)));
 	}
 
-	private Encode(channel: string, data: unknown) {
-		if (!this.roomId && this.transportType == "blueboat") throw new Error("Room ID not found, can't send data");
+	private Encode(channel: string, data: Packet) {
+		if (!this.roomId && this.transportType == "blueboat") throw new Error("Room ID not found");
 
 		if (this.transportType == "colyseus") return Colyseus.encode(channel, data);
 		else return Blueboat.encode(channel, data, this.roomId);
 	}
 
-	private Decode(data: string) {
+	private Decode(data: Packet) {
 		if (this.transportType == "colyseus") return Colyseus.decode(data);
 		else return Blueboat.decode(data);
 	}
