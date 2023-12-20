@@ -1,6 +1,6 @@
 // import Colyseus from "./frameworks/Colyseus";
 import Colyseus from "./frameworks/colyseus/export";
-import Blueboat from "./frameworks/BlueBoat";
+import blueboat from "./frameworks/blueboat";
 import { ParsePacket } from "./Utils/ParsePacket";
 import { Packet, Socket } from "../../types";
 
@@ -26,7 +26,7 @@ class SocketHandler extends EventTarget {
 			if (!handlerThis.socket) return;
 			handlerThis.socket._send(data);
 
-			const decoded = Blueboat.decode(data);
+			const decoded = blueboat.decode(data);
 
 			if (handlerThis.transportType == "blueboat" && !handlerThis.roomId) {
 				if (decoded.roomId) handlerThis.roomId = decoded.roomId;
@@ -79,12 +79,12 @@ class SocketHandler extends EventTarget {
 		if (!this.roomId && this.transportType == "blueboat") throw new Error("Room ID not found");
 
 		if (this.transportType == "colyseus") return Colyseus.encode(channel, data);
-		else return Blueboat.encode(channel, data, this.roomId);
+		else return blueboat.encode(channel, data, this.roomId);
 	}
 
 	private Decode(data: Packet) {
 		if (this.transportType == "colyseus") return Colyseus.decode(data);
-		else return Blueboat.decode(data);
+		else return blueboat.decode(data);
 	}
 }
 
