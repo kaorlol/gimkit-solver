@@ -1,6 +1,6 @@
 {
 	"name": "gimkit",
-	"version": "1.1.0",
+	"version": "1.1.2",
 	"description": "gimkit tools",
 	"main": "build/content.js",
 	"scripts": {
@@ -15,6 +15,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.14.0",
 		"@typescript-eslint/parser": "^6.14.0",
 		"eslint": "^8.56.0",
+		"javascript-obfuscator": "^4.1.0",
 		"ts-loader": "^9.5.1",
 		"typescript": "^5.3.3",
 		"webextension-polyfill": "^0.10.0",

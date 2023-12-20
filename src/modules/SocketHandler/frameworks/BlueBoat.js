@@ -1,18 +1,30 @@
-// took from https://github.com/TheLazySquid/GimkitCheat/blob/main/src/network/blueboat.js THANKS!
-function n(t, e, n) {
-	for (var i = 0, s = 0, o = n.length; s < o; s++)
-		(i = n.charCodeAt(s)) < 128
-			? t.setUint8(e++, i)
-			: (i < 2048
-					? t.setUint8(e++, 192 | (i >> 6))
-					: (i < 55296 || 57344 <= i
-							? t.setUint8(e++, 224 | (i >> 12))
-							: (s++,
-								(i = 65536 + (((1023 & i) << 10) | (1023 & n.charCodeAt(s)))),
-								t.setUint8(e++, 240 | (i >> 18)),
-								t.setUint8(e++, 128 | ((i >> 12) & 63))),
-						t.setUint8(e++, 128 | ((i >> 6) & 63))),
-				t.setUint8(e++, 128 | (63 & i)));
+// Taken from the game code
+
+function encodeUTF8ToByteArray(dataView, byteOffset, unicodeString) {
+    const length = unicodeString.length;
+
+    for (let i = 0; i < length; i++) {
+        let charCode = unicodeString.charCodeAt(i);
+
+        if (charCode < 128) {
+            dataView.setUint8(byteOffset++, charCode);
+        } else {
+            if (charCode < 2048) {
+                dataView.setUint8(byteOffset++, 192 | (charCode >> 6));
+            } else if ((charCode >= 55296 && charCode < 57344) || charCode >= 65536) {
+                let highSurrogate = charCode;
+                let lowSurrogate = unicodeString.charCodeAt(++i);
+                charCode = 65536 + (((highSurrogate & 1023) << 10) | (lowSurrogate & 1023));
+
+                dataView.setUint8(byteOffset++, 240 | (charCode >> 18));
+                dataView.setUint8(byteOffset++, 128 | ((charCode >> 12) & 63));
+            } else {
+                dataView.setUint8(byteOffset++, 224 | (charCode >> 12));
+            }
+
+            dataView.setUint8(byteOffset++, 128 | ((charCode >> 6) & 63));
+        }
+    }
 }
 
 function encode(t, e, s) {
@@ -167,7 +179,7 @@ function encode(t, e, s) {
 		for (var u, h = 0, d = 0, f = 0, p = e.length; f < p; f++)
 			if ((r.setUint8(c + f, e[f]), f + 1 === l)) {
 				if (((h = (u = i[a]).u), (d = c + l), u.l)) for (var g = new Uint8Array(u.l), E = 0; E < h; E++) r.setUint8(d + E, g[E]);
-				else u.h ? n(r, d, u.h) : void 0 !== u.o && r.setFloat64(d, u.o);
+				else u.h ? encodeUTF8ToByteArray(r, d, u.h) : void 0 !== u.o && r.setFloat64(d, u.o);
 				(c += h), i[++a] && (l = i[a].t);
 			}
 		let y = Array.from(new Uint8Array(o));

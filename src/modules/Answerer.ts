@@ -5,6 +5,7 @@ class Answerer {
 	type: string;
 	socketHandler: SocketHandler;
 	answerData: AnswererData;
+	gameEnded: boolean = false;
 
 	constructor(type: string, socketHandler: SocketHandler) {
 		this.type = type;
@@ -22,7 +23,12 @@ class Answerer {
 		if (this.type == "Packet") {
 			this.StartReceiver();
 
-			setInterval(() => {
+			const interval = setInterval(() => {
+				if (this.gameEnded) {
+					clearInterval(interval);
+					return;
+				}
+
 				this.PacketAnswer();
 			}, 1000);
 		}
@@ -30,9 +36,15 @@ class Answerer {
 
 	private StartReceiver() {
 		this.socketHandler.addEventListener("receiveMessage", (event) => {
-			if (this.socketHandler.transportType == "colyseus") return;
-
 			const detail = (event as CustomEvent).detail;
+			if (detail?.key == "end_game" || detail?.key == "UPDATED_PLAYER_LEADERBOARD") {
+				console.info("[GS] 🏁 Game ended");
+				this.gameEnded = true;
+
+				return;
+			}
+
+			if (this.socketHandler.transportType == "colyseus") return;
 			if (detail?.key != "STATE_UPDATE") return;
 
 			switch (detail.data.type) {
@@ -52,20 +64,19 @@ class Answerer {
 		});
 
 		this.socketHandler.addEventListener("receiveChanges", (event) => {
+			if (this.gameEnded) return;
+
 			const detail = (event as CustomEvent).detail;
 			const changes: Change[] = detail;
 
 			for (const change of changes) {
 				for (const [key, value] of Object.entries(change.data)) {
-					if (key != "GLOBAL_questions") continue;
-
-					this.answerData.questions = JSON.parse(value);
-					this.answerData.answerDeviceId = change.id;
-				}
-
-				for (const [key, value] of Object.entries(change.data)) {
 					const mainCharacterId = window.stores?.phaser?.mainCharacter?.id;
-					if (key.includes("currentQuestionId") && key.includes(mainCharacterId)) {
+
+					if (key == "GLOBAL_questions") {
+						this.answerData.questions = JSON.parse(value);
+						this.answerData.answerDeviceId = change.id;
+					} else if (key.includes("currentQuestionId") && key.includes(mainCharacterId)) {
 						this.answerData.currentQuestionId = value;
 					}
 				}
@@ -89,14 +100,14 @@ class Answerer {
 		const correctQuestion = questions?.find((question) => question._id == currentQuestionId);
 		if (!correctQuestion) return;
 
-		const answerId = this.GetAnswerForQuestion(correctQuestion);
+		const answer = this.GetAnswerForQuestion(correctQuestion);
 		this.socketHandler.SendData("MESSAGE_FOR_DEVICE", {
 			key: "answered",
 			deviceId: this.answerData.answerDeviceId,
-			data: { answer: answerId },
+			data: { answer: answer },
 		});
 
-		const answerText = correctQuestion.answers.find((answer) => answer._id == answerId)?.text;
+		const answerText = correctQuestion.answers.find((found) => found._id == answer)?.text || answer;
 		console.info(`[GS] 🎯 Answered question: '${correctQuestion.text}' with answer: '${answerText}'`);
 	}
 
@@ -107,20 +118,25 @@ class Answerer {
 		const question = questions.find((question) => question._id == questionId);
 		if (!question) return;
 
-		const answerId = this.GetAnswerForQuestion(question);
+		const answer = this.GetAnswerForQuestion(question);
 		this.socketHandler.SendData("QUESTION_ANSWERED", {
-			answerId,
+			answer,
 			questionId,
 		});
 
-		const answerText = question.answers.find((answer) => answer._id == answerId)?.text;
+		const answerText = question.answers.find((found) => found._id == answer)?.text || answer;
 		console.info(`[GS] 🎯 Answered question: '${question.text}' with answer: '${answerText}'`);
 	}
 
 	private GetAnswerForQuestion(question: Question): string {
 		if (question.type == "mc") {
 			const correctAnswerId = question.answers.find((answer) => answer.correct)?._id;
-			return correctAnswerId || "";
+			return (
+				correctAnswerId ||
+				(() => {
+					throw new Error("Correct answer not found");
+				})()
+			);
 		}
 
 		return question.answers[0].text;

@@ -43,11 +43,14 @@
 
 import SocketHandler from "./modules/SocketHandler/Socket";
 import Answerer from "./modules/Answerer";
+import InitHook from "./modules/Hooks";
 
 const socketHandler = new SocketHandler();
 socketHandler.addEventListener("socket", (event) => {
 	const detail = (event as CustomEvent).detail;
 	console.info("[GS] 🪝 Hooked WebSocket:", detail.url);
+
+	InitHook();
 });
 
 const answerer = new Answerer("Packet", socketHandler);

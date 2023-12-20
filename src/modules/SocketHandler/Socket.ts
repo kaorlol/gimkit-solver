@@ -1,13 +1,7 @@
-// took (mostly) from https://github.com/TheLazySquid/GimkitCheat/blob/main/src/network/socket.ts THANKS!
-
-import Colyseus from "./modules/Colyseus";
-import Blueboat from "./modules/BlueBoat";
+import Colyseus from "./frameworks/Colyseus";
+import Blueboat from "./frameworks/BlueBoat";
 import { ParsePacket } from "./Utils/ParsePacket";
-
-interface Socket extends WebSocket {
-	_send: (data: string | ArrayBufferLike | Blob | ArrayBufferView) => void;
-	RegisterSocket: (socket: Socket) => void;
-}
+import { Socket } from "../../types";
 
 class SocketHandler extends EventTarget {
 	socket: Socket | null = null;

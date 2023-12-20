@@ -10,6 +10,11 @@ declare global {
 	}
 }
 
+export interface Socket extends WebSocket {
+	_send: (data: string | ArrayBufferLike | Blob | ArrayBufferView) => void;
+	RegisterSocket: (socket: Socket) => void;
+}
+
 export interface Packet {
 	key: string;
 	deviceId: string;
