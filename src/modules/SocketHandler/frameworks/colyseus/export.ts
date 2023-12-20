@@ -10,6 +10,8 @@ const Protocol = {
 	ROOM_DATA_SCHEMA: 16,
 };
 
+// (mostly) taken from the game code and converted to typescript
+
 class Decoder {
 	_offset: number;
 	_buffer: ArrayBuffer;

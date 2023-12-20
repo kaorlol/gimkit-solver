@@ -1,4 +1,4 @@
-// Taken from the game code
+// Taken from the game code (scrambled webpack so i am NOT making it into TS)
 
 function encodeUTF8ToByteArray(dataView, byteOffset, unicodeString) {
     const length = unicodeString.length;
