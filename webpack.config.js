@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
 	entry: {
 		script: "./src/index.ts",
-		content : "./src/content.ts",
+		content: "./src/content.ts",
 	},
 	module: {
 		rules: [
@@ -23,4 +23,5 @@ module.exports = {
 		path: path.resolve(__dirname, "build"),
 		filename: "[name].js",
 	},
+	devtool: "source-map",
 };

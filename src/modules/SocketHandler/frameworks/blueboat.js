@@ -1,5 +1,6 @@
-// Taken from the game code (scrambled webpack so i am NOT making it into TS)
+// Taken from the game code (scrambled webpack so i am NOT making it into TS) WHY DO THEY HIDE THE SCHEMA IN THE GAME BROOOO
 
+// only thing i changed because i was planing on descrambling (i was a dumbass)
 function encodeUTF8ToByteArray(dataView, byteOffset, unicodeString) {
     const length = unicodeString.length;
 

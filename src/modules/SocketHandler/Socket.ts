@@ -1,5 +1,4 @@
-// import Colyseus from "./frameworks/Colyseus";
-import Colyseus from "./frameworks/colyseus/export";
+import Colyseus from "./frameworks/colyseus/index";
 import blueboat from "./frameworks/blueboat";
 import { ParsePacket } from "./Utils/ParsePacket";
 import { Packet, Socket } from "../../types";
@@ -78,12 +77,12 @@ class SocketHandler extends EventTarget {
 	private Encode(channel: string, data: Packet) {
 		if (!this.roomId && this.transportType == "blueboat") throw new Error("Room ID not found");
 
-		if (this.transportType == "colyseus") return Colyseus.encode(channel, data);
+		if (this.transportType == "colyseus") return Colyseus.encode(channel, data as ArrayBuffer);
 		else return blueboat.encode(channel, data, this.roomId);
 	}
 
 	private Decode(data: Packet) {
-		if (this.transportType == "colyseus") return Colyseus.decode(data);
+		if (this.transportType == "colyseus") return Colyseus.decode(data as ArrayBuffer);
 		else return blueboat.decode(data);
 	}
 }

@@ -1,3 +1,5 @@
+// https://github.com/colyseus/schema/blob/master/src/encoding/decode.ts
+
 export interface Iterator {
 	offset: number;
 }

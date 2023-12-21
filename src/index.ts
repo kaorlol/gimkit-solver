@@ -42,7 +42,7 @@
 // answerQuestion();
 
 import SocketHandler from "./modules/SocketHandler/Socket";
-import Answerer from "./modules/Answerer";
+import Answerer from "./modules/Scripts/Answerer";
 import InitHook from "./modules/Hooks";
 
 const socketHandler = new SocketHandler();
