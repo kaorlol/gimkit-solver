@@ -1,3 +1,4 @@
+import { Defer, PayloadValue } from "../../../../types";
 import { string, number, stringCheck } from "./encoder/decode";
 
 // JOIN_ROOM: 10
@@ -339,17 +340,6 @@ function utf8Length(str: string) {
 
 	return length;
 }
-
-// Don't feel like adding these to types.ts
-interface Defer {
-	_offset?: number;
-	_length?: number;
-	_str?: string | unknown;
-	_bin?: ArrayBuffer;
-	_float?: number | unknown;
-}
-
-type PayloadValue = string | number | boolean | null | undefined | ArrayBuffer | { [key: string]: unknown };
 
 function _encode(bytes: number[], defers: Defer[], value: PayloadValue) {
 	let high = 0;

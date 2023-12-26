@@ -42,8 +42,9 @@
 // answerQuestion();
 
 import SocketHandler from "./modules/SocketHandler/Socket";
-import Answerer from "./modules/Scripts/Answerer";
+import Answerer from "./modules/Features/Answerer";
 import InitHook from "./modules/Hooks";
+import Buyer from "./modules/Features/Buyer";
 
 const socketHandler = new SocketHandler();
 socketHandler.addEventListener("socket", (event) => {
@@ -56,6 +57,10 @@ socketHandler.addEventListener("socket", (event) => {
 const answerer = new Answerer("Packet", socketHandler);
 answerer.StartReceiver();
 answerer.AutoAnswer();
+
+const buyer = new Buyer(socketHandler);
+buyer.StartReceiver();
+buyer.AutoBuy();
 
 socketHandler.GetSocket();
 

@@ -5,7 +5,7 @@ class Answerer {
 	type: string;
 	socketHandler: SocketHandler;
 	answerData: AnswererData;
-	gameEnded: boolean = false;
+	gameEnded = false;
 
 	constructor(type: string, socketHandler: SocketHandler) {
 		this.type = type;
@@ -69,8 +69,7 @@ class Answerer {
 
 			for (const change of changes) {
 				for (const [key, value] of Object.entries(change.data)) {
-					const mainCharacterId = window.stores?.phaser?.mainCharacter?.id;
-
+					const mainCharacterId = window.stores.phaser.mainCharacter.id;
 					if (key == "GLOBAL_questions") {
 						this.answerData.questions = JSON.parse(value);
 						this.answerData.answerDeviceId = change.id;
@@ -95,7 +94,7 @@ class Answerer {
 
 		const questions = this.answerData.questions;
 		const currentQuestionId = this.answerData.currentQuestionId;
-		const correctQuestion = questions?.find((question) => question._id == currentQuestionId);
+		const correctQuestion = questions.find((question) => question._id == currentQuestionId);
 		if (!correctQuestion) return;
 
 		const answer = this.GetAnswerForQuestion(correctQuestion);
