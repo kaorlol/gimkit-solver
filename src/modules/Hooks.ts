@@ -24,7 +24,7 @@ export default function InitHook() {
 			const listeners = thisArg[s][args[0]?.type];
 			if (listeners) {
 				for (const listener of listeners) {
-					listener(eventToObject(args[0]));
+					listener(EventToObject(args[0]));
 				}
 			} else {
 				return Reflect.apply(target, thisArg, args);
@@ -34,7 +34,7 @@ export default function InitHook() {
 
 	console.info("[GS] 🪝 Hooked dispatchEvent");
 
-	function eventToObject(event: { [x: string]: unknown }) {
+	function EventToObject(event: { [x: string]: unknown }) {
 		const object: { [x: string]: unknown } = {};
 		for (const property in event) object[property] = event[property];
 		object.isTrusted = true;

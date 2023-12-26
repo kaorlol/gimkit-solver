@@ -6,7 +6,10 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"sourceMap": true,
-		"allowJs": true
+		"allowJs": true,
+		"paths": {
+            "types": ["./src/types.ts"],
+        },
 	},
 	"include": ["./src/**/*"]
 }

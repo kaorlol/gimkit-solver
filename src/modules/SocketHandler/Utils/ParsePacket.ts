@@ -1,4 +1,4 @@
-import { ChangePacket } from "../../../types";
+import { ChangePacket } from "types";
 
 export function ParsePacket(packet: ChangePacket) {
 	const returnVar = [];

@@ -1,4 +1,4 @@
-import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "../../types";
+import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "types";
 import SocketHandler from "../SocketHandler/Socket";
 
 class Buyer {

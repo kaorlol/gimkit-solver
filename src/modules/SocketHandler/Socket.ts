@@ -1,7 +1,7 @@
 import Colyseus from "./frameworks/colyseus/index";
 import blueboat from "./frameworks/blueboat";
 import { ParsePacket } from "./Utils/ParsePacket";
-import { Packet } from "../../types";
+import { Packet } from "types";
 
 type Data = string | ArrayBufferLike | Blob | ArrayBufferView;
 

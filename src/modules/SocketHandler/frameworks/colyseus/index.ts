@@ -1,4 +1,4 @@
-import { Defer, PayloadValue } from "../../../../types";
+import { Defer, PayloadValue } from "types";
 import { string, number, stringCheck } from "./encoder/decode";
 
 // JOIN_ROOM: 10
