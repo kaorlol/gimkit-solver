@@ -1,5 +1,5 @@
-import { AnswererData, Question } from "types/answer";
-import { Change } from "types/socket";
+import { AnswererData, Question } from "../types/answer";
+import { Change } from "../types/socket";
 import SocketHandler from "../modules/SocketHandler/Socket";
 
 class Answerer {

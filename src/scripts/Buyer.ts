@@ -1,5 +1,5 @@
-import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "types/upgrade";
 import SocketHandler from "../modules/SocketHandler/Socket";
+import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "../types";
 
 class Buyer {
 	socketHandler: SocketHandler;
