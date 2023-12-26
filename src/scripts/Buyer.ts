@@ -1,5 +1,5 @@
-import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "@gimkitsolver/types";
-import SocketHandler from "../SocketHandler/Socket";
+import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "types/upgrade";
+import SocketHandler from "../modules/SocketHandler/Socket";
 
 class Buyer {
 	socketHandler: SocketHandler;

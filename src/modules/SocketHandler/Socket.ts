@@ -1,9 +1,7 @@
 import Colyseus from "./library/colyseus/index";
 import blueboat from "./library/blueboat";
-import { ParsePacket } from "./utils/ParsePacket";
-import { Packet } from "@gimkitsolver/types";
-
-type Data = string | ArrayBufferLike | Blob | ArrayBufferView;
+import { ParsePacket } from "utils/ParsePacket";
+import { Packet, Data } from "types/socket";
 
 class SocketHandler extends EventTarget {
 	socket: WebSocket | null = null;

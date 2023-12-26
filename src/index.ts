@@ -42,9 +42,9 @@
 // answerQuestion();
 
 import SocketHandler from "./modules/SocketHandler/Socket";
-import Answerer from "./modules/scripts/Answerer";
+import Answerer from "./scripts/Answerer";
 import InitHook from "./modules/Hooks";
-import Buyer from "./modules/scripts/Buyer";
+import Buyer from "./scripts/Buyer";
 
 const socketHandler = new SocketHandler();
 socketHandler.addEventListener("socket", (event) => {

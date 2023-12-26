@@ -75,10 +75,6 @@ export enum UpgradeKeys {
 }
 
 export interface UpgradeStrategy {
-	// filter(
-	// 	callbackfn: (value: [keyof UpgradeLevels, number, number], index: number, array: [keyof UpgradeLevels, number, number][]) => unknown,
-	// 	thisArg?: unknown
-	// ): [keyof UpgradeLevels, number, number][];
 	find(callbackfn: (value: [keyof UpgradeLevels, number, number], index: number, array: [keyof UpgradeLevels, number, number][]) => unknown, thisArg?: unknown): [keyof UpgradeLevels, number, number] | undefined;
 	[index: number]: [keyof UpgradeLevels, number, number];
 }

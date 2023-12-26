@@ -1,4 +1,4 @@
-import { ChangePacket } from "@gimkitsolver/types";
+import { ChangePacket } from "types/socket";
 
 export function ParsePacket(packet: ChangePacket) {
 	const returnVar = [];
