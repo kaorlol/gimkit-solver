@@ -24,7 +24,7 @@
 	},
 	"webExt": {
 		"sourceDir": "build",
-		"artifactsDir": "artifacts",
+		"archiveDir": "archive",
 		"ignoreFiles": [
 			"**/*.map"
 		]
