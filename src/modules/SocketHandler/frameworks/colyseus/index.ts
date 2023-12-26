@@ -1,5 +1,5 @@
 import { Defer, PayloadValue } from "types";
-import { string, number, stringCheck } from "./encoder/decode";
+import { string, number, stringCheck } from "./components/decode";
 
 // JOIN_ROOM: 10
 // ERROR: 11
