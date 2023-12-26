@@ -1,4 +1,4 @@
-import { Defer, PayloadValue } from "types";
+import { Defer, PayloadValue } from "@gimkitsolver/types";
 import { string, number, stringCheck } from "./components/decode";
 
 // JOIN_ROOM: 10

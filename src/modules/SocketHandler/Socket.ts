@@ -1,7 +1,7 @@
-import Colyseus from "./frameworks/colyseus/index";
-import blueboat from "./frameworks/blueboat";
+import Colyseus from "./library/colyseus/index";
+import blueboat from "./library/blueboat";
 import { ParsePacket } from "./utils/ParsePacket";
-import { Packet } from "types";
+import { Packet } from "@gimkitsolver/types";
 
 type Data = string | ArrayBufferLike | Blob | ArrayBufferView;
 

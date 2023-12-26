@@ -1,4 +1,4 @@
-import { AnswererData, Change, Question } from "types";
+import { AnswererData, Change, Question } from "@gimkitsolver/types";
 import SocketHandler from "../SocketHandler/Socket";
 
 class Answerer {

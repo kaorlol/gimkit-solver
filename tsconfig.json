@@ -8,7 +8,7 @@
 		"sourceMap": true,
 		"allowJs": true,
 		"paths": {
-            "types": ["./src/types.ts"],
+            "@gimkitsolver/types": ["./src/types.ts"],
         },
 	},
 	"include": ["./src/**/*"]
