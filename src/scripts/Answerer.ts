@@ -24,7 +24,7 @@ class Answerer {
 
 	AutoAnswer() {
 		if (this.type == "Packet") {
-			this.StartInterval()
+			this.StartInterval();
 		}
 	}
 

@@ -1,3 +1,26 @@
+declare global {
+	interface Window {
+		stores: {
+			phaser: {
+				mainCharacter: {
+					id: string;
+				};
+			},
+			network: {
+				room: {
+					connection: {
+						transport: {
+							ws: {
+								url: string;
+							}
+						};
+					};
+				};
+			};
+		};
+	}
+}
+
 export interface Packet {
 	key?: string;
 	deviceId?: string;

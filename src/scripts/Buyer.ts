@@ -1,5 +1,12 @@
 import SocketHandler from "../modules/SocketHandler/Socket";
-import { CompletedUpgrade, UpgradeData, UpgradeKeys, UpgradeLevels, UpgradeStrategy } from "../types";
+import { CompletedUpgrade, UpgradeData, UpgradeLevels, UpgradeStrategy } from "../types/upgrade";
+
+enum UpgradeKeys {
+	"moneyPerQuestion" = "Money Per Question",
+	"streakBonus" = "Streak Bonus",
+	"multiplier" = "Multiplier",
+	"insurance" = "Insurance",
+}
 
 class Buyer {
 	socketHandler: SocketHandler;

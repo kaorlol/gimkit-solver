@@ -5,13 +5,6 @@ export interface UpgradeLevels {
 	insurance: number;
 }
 
-export enum UpgradeKeys {
-	"moneyPerQuestion" = "Money Per Question",
-	"streakBonus" = "Streak Bonus",
-	"multiplier" = "Multiplier",
-	"insurance" = "Insurance",
-}
-
 export interface UpgradeStrategy {
 	find(
 		callbackfn: (value: [keyof UpgradeLevels, number, number], index: number, array: [keyof UpgradeLevels, number, number][]) => unknown,
