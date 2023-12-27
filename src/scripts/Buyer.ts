@@ -10,7 +10,6 @@ class Buyer {
 	receivedMessageInit = false;
 	bought = false;
 	balance = 0;
-	gameEnded = false;
 
 	constructor(socketHandler: SocketHandler) {
 		this.socketHandler = socketHandler;
@@ -49,10 +48,9 @@ class Buyer {
 	}
 
 	AutoBuy() {
-		if (this.gameEnded) return;
-
 		const interval = setInterval(() => {
-			if (this.gameEnded) {
+			if (!this.socketHandler.gameStarted) return;
+			if (this.socketHandler.gameEnded) {
 				clearInterval(interval);
 				return;
 			}
@@ -64,11 +62,6 @@ class Buyer {
 	StartReceiver() {
 		this.socketHandler.addEventListener("receiveMessage", (event) => {
 			const detail = (event as CustomEvent).detail;
-			if (detail?.key == "end_game" || detail?.key == "UPDATED_PLAYER_LEADERBOARD") {
-				console.info("[GS] 🏁 Game ended");
-				this.gameEnded = true;
-				return;
-			}
 
 			if (this.socketHandler.transportType == "colyseus") return;
 
@@ -124,10 +117,7 @@ class Buyer {
 	}
 
 	private PushCompleted(name: keyof UpgradeLevels, level: number) {
-		this.completedUpgrades.push({
-			name,
-			level,
-		});
+		this.completedUpgrades.push({ name, level });
 	}
 
 	private BuyUpgrade(name: string, level: number) {

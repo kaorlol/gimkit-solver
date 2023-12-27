@@ -1,12 +1,14 @@
 import { AnswererData, Question } from "../types/answer";
 import { Change } from "../types/socket";
 import SocketHandler from "../modules/SocketHandler/Socket";
+import CalculateTime from "../utils/CalculateTime";
 
 class Answerer {
 	type: string;
 	socketHandler: SocketHandler;
 	answerData: AnswererData;
-	gameEnded = false;
+	waitTime = 3500;
+	interval: NodeJS.Timeout | undefined;
 
 	constructor(type: string, socketHandler: SocketHandler) {
 		this.type = type;
@@ -22,29 +24,16 @@ class Answerer {
 
 	AutoAnswer() {
 		if (this.type == "Packet") {
-			const interval = setInterval(() => {
-				if (this.gameEnded) {
-					clearInterval(interval);
-					return;
-				}
-
-				this.PacketAnswer();
-			}, 1000);
+			this.StartInterval()
 		}
 	}
 
 	StartReceiver() {
 		this.socketHandler.addEventListener("receiveMessage", (event) => {
 			const detail = (event as CustomEvent).detail;
-			if (detail?.key == "end_game" || detail?.key == "UPDATED_PLAYER_LEADERBOARD") {
-				console.info("[GS] 🏁 Game ended");
-				this.gameEnded = true;
-
-				return;
-			}
 
 			if (this.socketHandler.transportType == "colyseus") return;
-			if (detail?.key != "STATE_UPDATE") return;
+			if (detail.key != "STATE_UPDATE") return;
 
 			switch (detail.data.type) {
 				case "GAME_QUESTIONS":
@@ -63,7 +52,7 @@ class Answerer {
 		});
 
 		this.socketHandler.addEventListener("receiveChanges", (event) => {
-			if (this.gameEnded) return;
+			if (this.socketHandler.gameEnded) return;
 
 			const detail = (event as CustomEvent).detail;
 			const changes: Change[] = detail;
@@ -105,7 +94,7 @@ class Answerer {
 			data: { answer: answer },
 		});
 
-		const answerText = correctQuestion.answers.find((found) => found._id == answer)?.text || answer;
+		const answerText = correctQuestion.answers.find((found) => found._id == answer)?.text ?? answer;
 		console.info(`[GS] 🎯 Answered question: '${correctQuestion.text}' with answer: '${answerText}'`);
 	}
 
@@ -122,13 +111,19 @@ class Answerer {
 			questionId,
 		});
 
-		const answerText = question.answers.find((found) => found._id == answer)?.text || answer;
+		const answerText = question.answers.find((found) => found._id == answer)?.text ?? answer;
 		console.info(`[GS] 🎯 Answered question: '${question.text}' with answer: '${answerText}'`);
 	}
 
 	private GetAnswerForQuestion(question: Question): string {
 		if (question.type == "mc") {
 			const correctAnswerId = question.answers.find((answer) => answer.correct)?._id;
+
+			const readingTime = CalculateTime(question.text, 250);
+			const readingAnswersTime = question.answers.reduce((acc, answer) => acc + CalculateTime(answer.text, 80), 0);
+
+			this.UpdateWaitTime(readingTime + readingAnswersTime);
+
 			return (
 				correctAnswerId ||
 				(() => {
@@ -137,7 +132,31 @@ class Answerer {
 			);
 		}
 
+		const readingTime = CalculateTime(question.text, 250);
+		const writingTime = CalculateTime(question.answers[0].text, 85);
+		this.UpdateWaitTime(readingTime + writingTime);
+
 		return question.answers[0].text;
+	}
+
+	private StartInterval() {
+		clearInterval(this.interval);
+		this.interval = setInterval(() => {
+			if (!this.socketHandler.gameStarted) return;
+			if (this.socketHandler.gameEnded) {
+				clearInterval(this.interval);
+				return;
+			}
+
+			this.PacketAnswer();
+		}, this.waitTime);
+	}
+
+	private UpdateWaitTime(WaitTime: number) {
+		console.debug(`[GS] ⏱️ Wait time updated to: ${WaitTime}ms`);
+
+		this.waitTime = WaitTime;
+		this.StartInterval();
 	}
 }
 
