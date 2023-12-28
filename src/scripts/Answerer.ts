@@ -120,12 +120,16 @@ class Answerer {
 			const correctAnswerId = question.answers.find((answer) => answer.correct)?._id;
 
 			const readingTime = CalculateTime(question.text, 250);
-			const readingAnswersTime = question.answers.reduce((acc, answer) => acc + CalculateTime(answer.text, 80), 0);
+			let readingAnswersTime = 0;
+			for (const answer of question.answers) {
+				readingAnswersTime += CalculateTime(answer.text, 250);
+				if (answer._id == correctAnswerId) break;
+			}
 
 			this.UpdateWaitTime(readingTime + readingAnswersTime);
 
 			return (
-				correctAnswerId ||
+				correctAnswerId ??
 				(() => {
 					throw new Error("Correct answer not found");
 				})()
@@ -133,7 +137,7 @@ class Answerer {
 		}
 
 		const readingTime = CalculateTime(question.text, 250);
-		const writingTime = CalculateTime(question.answers[0].text, 85);
+		const writingTime = CalculateTime(question.answers[0].text, 80);
 		this.UpdateWaitTime(readingTime + writingTime);
 
 		return question.answers[0].text;
@@ -153,11 +157,54 @@ class Answerer {
 	}
 
 	private UpdateWaitTime(WaitTime: number) {
-		console.debug(`[GS] ⏱️ Wait time updated to: ${WaitTime}ms`);
-
-		this.waitTime = WaitTime;
+		this.waitTime = WaitTime + Math.trunc(Math.random(250, 500));
 		this.StartInterval();
+
+		console.debug(`[GS] ⏱️ Updated wait time to: ${this.waitTime}ms`);
 	}
 }
 
 export default Answerer;
+
+// import { InitBypass } from "./modules/Bypass";
+// import { FindAnswer } from "./modules/GetAnswers";
+// import { GetElement } from "./modules/Utils/GetElement";
+// // import { Sleep } from "./modules/Utils/Sleep";
+// // import { TypeText } from "./modules/Utils/TypeText";
+// import { WaitForElement } from "./modules/Utils/WaitForElement";
+
+// InitBypass();
+
+// async function answerQuestion() {
+// 	await WaitForElement(".notranslate.lang-en");
+
+// 	const question = GetElement("//span[@class='notranslate lang-en']")?.textContent as string;
+// 	const result = await FindAnswer(question);
+// 	if (result?.answer == null) throw new Error("Answer not found");
+// 	if (result?.type == "text") {
+// 		const input = GetElement("//input") as HTMLInputElement;
+// 		input.setAttribute("value", result?.answer);
+// 		// await TypeText(result?.answer, input);
+// 		input.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
+
+// 		const submitDiv = GetElement("//div[text()='Submit']") as HTMLDivElement;
+// 		submitDiv.dispatchEvent(new Event("click", { bubbles: true, cancelable: true }));
+
+// 		console.debug(`Submitted answer: ${result?.answer}`);
+// 	} else if (result?.type == "mc") {
+// 		const style = "opacity: 1; transform: translateY(0%) translateZ(0px);";
+// 		const answers = GetElement(`//div[@style='${style}']`)?.childNodes[1].childNodes as NodeListOf<HTMLDivElement>;
+// 		if (!answers) throw new Error("Answers not found");
+
+// 		const index = Array.from(answers).findIndex((answer) => answer.querySelector(".notranslate.lang-en")?.textContent == result?.answer);
+// 		document.dispatchEvent(new KeyboardEvent("keydown", { keyCode: (index + 1).toString().charCodeAt(0) }));
+
+// 		console.debug(`Submitted answer: ${result?.answer}`);
+
+// 		// await Sleep(1000);
+
+// 		// document.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+// 	}
+// }
+
+// answerQuestion();
