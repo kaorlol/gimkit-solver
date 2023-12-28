@@ -14,8 +14,9 @@ declare global {
 Math.random = (min: number = 0, max: number = 1) => {
 	if (min > max) throw new Error("Min cannot be greater than max");
 
-	const pseudorandomNumber = crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
-	return pseudorandomNumber * (max - min) + min;
+	const array = new Uint32Array(1);
+	const pseudorandomValues = crypto.getRandomValues(array)[0];
+	return (pseudorandomValues / 2 ** 32) * (max - min) + min;
 };
 
 const script = document.createElement("script");
