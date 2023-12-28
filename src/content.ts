@@ -11,14 +11,12 @@ declare global {
 	}
 }
 
-Object.defineProperty(Math, "random", {
-	value: (min: number = 0, max: number = 1) => {
-		if (min > max) throw new Error("Min cannot be greater than max");
+Math.random = (min: number = 0, max: number = 1) => {
+	if (min > max) throw new Error("Min cannot be greater than max");
 
-		const pseudorandomNumber = crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
-		return pseudorandomNumber * (max - min) + min;
-	},
-});
+	const pseudorandomNumber = crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+	return pseudorandomNumber * (max - min) + min;
+};
 
 const script = document.createElement("script");
 script.src = browser.runtime.getURL("script.js");
