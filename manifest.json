@@ -11,5 +11,5 @@
 			"run_at": "document_start"
 		}
 	],
-	"web_accessible_resources": ["script.js"]
+	"web_accessible_resources": ["index.js"]
 }

@@ -20,7 +20,7 @@ Math.random = (min: number = 0, max: number = 1) => {
 };
 
 const script = document.createElement("script");
-script.src = browser.runtime.getURL("script.js");
+script.src = browser.runtime.getURL("index.js");
 script.onload = () => script.remove();
 
 (document.head || document.documentElement).appendChild(script);
