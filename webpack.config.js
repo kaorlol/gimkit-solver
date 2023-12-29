@@ -3,6 +3,7 @@
 const path = require("path");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		script: "./src/index.ts",
 		content: "./src/content.ts",

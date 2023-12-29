@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Gimkit Solver",
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"description": "Gimkit Auto Answer",
 	"permissions": ["webRequest", "ws://*/*", "wss://*/*", "https://www.gimkit.com/*"],
 	"content_scripts": [

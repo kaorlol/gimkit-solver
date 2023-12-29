@@ -1,16 +1,17 @@
 {
 	"name": "gimkit",
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"description": "gimkit tools",
 	"main": "build/content.js",
 	"scripts": {
-		"build": "npx webpack --mode=production && copy manifest.json build && web-ext build --overwrite-dest",
-		"watch": "npx webpack --mode=production --watch",
-		"sign": "web-ext sign --api-key=$env:AMO_JWT_ISSUER --api-secret=$env:AMO_JWT_SECRET"
+		"build": "npx webpack && copy manifest.json build && web-ext --config=web-ext.config.js build",
+		"watch": "npx webpack --watch",
+		"sign": "web-ext --config=web-ext.config.js sign"
 	},
 	"author": "kaoru",
 	"license": "ISC",
 	"devDependencies": {
+		"@types/dotenv": "^8.2.0",
 		"@types/webextension-polyfill": "^0.10.7",
 		"@typescript-eslint/eslint-plugin": "^6.14.0",
 		"@typescript-eslint/parser": "^6.14.0",
@@ -18,6 +19,7 @@
 		"javascript-obfuscator": "^4.1.0",
 		"ts-loader": "^9.5.1",
 		"typescript": "^5.3.3",
+		"web-ext-plugin": "^2.9.0",
 		"webextension-polyfill": "^0.10.0",
 		"webpack": "^5.89.0",
 		"webpack-cli": "^5.1.4"
@@ -30,6 +32,7 @@
 		]
 	},
 	"dependencies": {
-		"@types/web": "^0.0.127"
+		"@types/web": "^0.0.127",
+		"dotenv": "^16.3.1"
 	}
 }
